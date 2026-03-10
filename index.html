@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagramas de Procesos - Sistema de Préstamo de Equipos</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sena-red: #C8102E;
+    --sena-dark: #1a1a2e;
+    --sena-teal: #0B7B8C;
+    --sena-teal2: #0FA3B1;
+    --sena-light: #E8F4F8;
+    --accent: #F4A300;
+    --gray: #6B7280;
+    --lightgray: #F3F4F6;
+    --white: #ffffff;
+    --process-strategic: #2C5F8A;
+    --process-clave: #0B7B8C;
+    --process-apoyo: #5C6E8A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: #f0f4f8;
+    color: #1a1a2e;
+    padding: 40px 20px;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.12);
+    page-break-after: always;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--sena-dark);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border-bottom: 4px solid var(--sena-red);
+  }
+
+  .sena-logo {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+  }
+
+  .header-text h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.02em;
+  }
+
+  .header-text p {
+    font-size: 12px;
+    color: #94a3b8;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 4px;
+  }
+
+  .badge {
+    margin-left: auto;
+    background: var(--sena-red);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* SECTION */
+  .section {
+    padding: 40px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--sena-red);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 6px;
+  }
+
+  .section-subtitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--sena-dark);
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  /* ===================== */
+  /*  MAPA DE PROCESOS     */
+  /* ===================== */
+  .process-map {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 2px solid var(--sena-dark);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .clients-wrapper {
+    display: flex;
+    align-items: stretch;
+  }
+
+  .client-label {
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+    background: var(--sena-dark);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 16px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+  }
+
+  .processes-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .process-band {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .process-band:last-child { border-bottom: none; }
+
+  .band-strategic { background: #EEF4FB; }
+  .band-clave { background: #E0F4F7; }
+  .band-apoyo { background: #F0F2F7; }
+
+  .band-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .band-strategic .band-label { color: var(--process-strategic); }
+  .band-clave .band-label { color: var(--process-clave); }
+  .band-apoyo .band-label { color: var(--process-apoyo); }
+
+  .process-cards {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .pcard {
+    flex: 1;
+    min-width: 130px;
+    border-radius: 4px;
+    padding: 12px 14px;
+    position: relative;
+    border: 1.5px solid transparent;
+  }
+
+  .pcard .pid {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .pcard .pname {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .band-strategic .pcard {
+    background: white;
+    border-color: #b8cfe8;
+  }
+  .band-strategic .pcard .pid { color: var(--process-strategic); }
+  .band-strategic .pcard .pname { color: #1e3a5f; }
+
+  .band-clave .pcard {
+    background: var(--sena-teal);
+    color: white;
+  }
+  .band-clave .pcard.highlight {
+    background: var(--sena-dark);
+    border-color: var(--accent);
+    border-width: 2px;
+  }
+  .band-clave .pcard .pid { color: rgba(255,255,255,0.7); }
+  .band-clave .pcard .pname { color: white; }
+  .band-clave .pcard.highlight .pname { color: var(--accent); }
+
+  .band-apoyo .pcard {
+    background: white;
+    border-color: #c5cce0;
+  }
+  .band-apoyo .pcard .pid { color: var(--process-apoyo); }
+  .band-apoyo .pcard .pname { color: #374151; }
+
+  .highlight-note {
+    font-size: 10px;
+    color: var(--sena-teal);
+    margin-top: 14px;
+    padding: 8px 12px;
+    background: #e0f4f7;
+    border-left: 3px solid var(--sena-teal);
+    border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ===================== */
+  /*   DIAGRAMA DE FLUJO   */
+  /* ===================== */
+  .spacer { height: 48px; }
+
+  .flowchart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    position: relative;
+  }
+
+  /* Nodes */
+  .fc-node {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+  }
+
+  .fc-terminal {
+    background: var(--sena-dark);
+    color: white;
+    border-radius: 50px;
+    padding: 10px 32px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    min-width: 120px;
+  }
+
+  .fc-terminal.end {
+    background: var(--sena-red);
+  }
+
+  .fc-process {
+    background: white;
+    border: 2px solid var(--sena-teal);
+    border-radius: 3px;
+    padding: 12px 20px;
+    min-width: 240px;
+    max-width: 320px;
+    color: var(--sena-dark);
+    font-weight: 500;
+  }
+
+  .fc-process.highlight {
+    background: var(--sena-teal);
+    color: white;
+    border-color: var(--sena-dark);
+    font-weight: 600;
+  }
+
+  .fc-decision {
+    width: 220px;
+    height: 64px;
+    background: var(--accent);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--sena-dark);
+    text-align: center;
+    padding: 0 36px;
+  }
+
+  /* Arrows */
+  .fc-arrow {
+    width: 2px;
+    height: 28px;
+    background: #9ca3af;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1;
+  }
+
+  .fc-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #9ca3af;
+  }
+
+  .fc-arrow-label {
+    position: absolute;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--sena-red);
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+  }
+
+  /* Branch layout for decisions */
+  .fc-branch {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+  }
+
+  .fc-branch-line {
+    position: absolute;
+    top: 0;
+    height: 2px;
+    background: #9ca3af;
+  }
+
+  .fc-branch-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .fc-branch-vert {
+    width: 2px;
+    background: #9ca3af;
+    position: relative;
+  }
+
+  .fc-branch-label {
+    position: absolute;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--sena-red);
+    white-space: nowrap;
+  }
+
+  /* legend */
+  .legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--gray);
+  }
+
+  .legend-symbol {
+    width: 28px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  .footer {
+    background: var(--sena-dark);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer p {
+    font-size: 10px;
+    color: #64748b;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .footer span {
+    font-size: 10px;
+    color: #475569;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* SVG flowchart */
+  .svg-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .page { box-shadow: none; border-radius: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== PAGE 1: MAPA DE PROCESOS ========== -->
+<div class="page">
+  <div class="header">
+    <!-- SENA logo SVG inline -->
+    <svg class="sena-logo" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="80" height="80" rx="4" fill="#C8102E"/>
+      <text x="40" y="52" text-anchor="middle" font-family="Arial" font-weight="900" font-size="22" fill="white">SENA</text>
+    </svg>
+    <div class="header-text">
+      <h1>Sistema de Gestión de Préstamo de Equipos</h1>
+      <p>Análisis y Diseño de Software · Identificación de Procesos Organizacionales</p>
+    </div>
+    <div class="badge">Entrega 01</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Figura 1</div>
+    <div class="section-subtitle">Mapa de Procesos de la Empresa / Institución</div>
+
+    <div class="process-map">
+      <!-- Procesos estratégicos -->
+      <div class="process-band band-strategic">
+        <div class="band-label">Procesos Estratégicos</div>
+        <div class="process-cards">
+          <div class="pcard">
+            <span class="pid">PE1</span>
+            <span class="pname">Dirección y Planeación Institucional</span>
+          </div>
+          <div class="pcard">
+            <span class="pid">PE2</span>
+            <span class="pname">Gestión de Calidad y Mejora Continua</span>
+          </div>
+          <div class="pcard">
+            <span class="pid">PE3</span>
+            <span class="pname">Control del Sistema de Gestión</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Procesos clave con clientes a los lados -->
+      <div class="clients-wrapper">
+        <div class="client-label">USUARIOS / APRENDICES</div>
+        <div class="processes-inner">
+          <div class="process-band band-clave" style="border-bottom:none;">
+            <div class="band-label">Procesos Clave</div>
+            <div class="process-cards">
+              <div class="pcard">
+                <span class="pid">PC1</span>
+                <span class="pname">Registro de Usuarios y Roles</span>
+              </div>
+              <div class="pcard highlight">
+                <span class="pid">PC2</span>
+                <span class="pname">Préstamo y Devolución de Equipos ★</span>
+              </div>
+              <div class="pcard">
+                <span class="pid">PC3</span>
+                <span class="pname">Seguimiento y Control de Inventario</span>
+              </div>
+              <div class="pcard">
+                <span class="pid">PC4</span>
+                <span class="pname">Gestión de Incidencias y Daños</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="client-label" style="transform:rotate(0deg); writing-mode:vertical-lr;">USUARIOS / APRENDICES</div>
+      </div>
+
+      <!-- Procesos de apoyo -->
+      <div class="process-band band-apoyo">
+        <div class="band-label">Procesos de Apoyo</div>
+        <div class="process-cards">
+          <div class="pcard">
+            <span class="pid">PA1</span>
+            <span class="pname">Gestión de Recursos Humanos</span>
+          </div>
+          <div class="pcard">
+            <span class="pid">PA2</span>
+            <span class="pname">Tecnología e Infraestructura TI</span>
+          </div>
+          <div class="pcard">
+            <span class="pid">PA3</span>
+            <span class="pname">Seguridad y Acceso a Instalaciones</span>
+          </div>
+          <div class="pcard">
+            <span class="pid">PA4</span>
+            <span class="pname">Administración y Finanzas</span>
+          </div>
+          <div class="pcard">
+            <span class="pid">PA5</span>
+            <span class="pname">Mantenimiento de Equipos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-note">
+      ★ PC2 — El proceso <strong>Préstamo y Devolución de Equipos</strong> es el proceso seleccionado para el diagrama de flujo (ver Figura 2).
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Sistema de Gestión de Préstamo de Equipos · SENA</p>
+    <span>Análisis y Diseño de Software · 2026</span>
+  </div>
+</div>
+
+<!-- SPACER between pages -->
+<div style="height:48px;"></div>
+
+<!-- ========== PAGE 2: DIAGRAMA DE FLUJO ========== -->
+<div class="page">
+  <div class="header">
+    <svg class="sena-logo" viewBox="0 0 80 80" fill="none">
+      <rect width="80" height="80" rx="4" fill="#C8102E"/>
+      <text x="40" y="52" text-anchor="middle" font-family="Arial" font-weight="900" font-size="22" fill="white">SENA</text>
+    </svg>
+    <div class="header-text">
+      <h1>Sistema de Gestión de Préstamo de Equipos</h1>
+      <p>Proceso PC2 · Préstamo y Devolución de Equipos</p>
+    </div>
+    <div class="badge">Entrega 01</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Figura 2</div>
+    <div class="section-subtitle">Diagrama de Flujo del Proceso — PC2: Préstamo y Devolución de Equipos</div>
+
+    <div class="svg-wrap">
+      <svg viewBox="0 0 700 1020" xmlns="http://www.w3.org/2000/svg" width="100%" style="max-width:700px; display:block; margin:0 auto;">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L0,8 L8,4 z" fill="#6b7280"/>
+          </marker>
+          <marker id="arr-red" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <path d="M0,0 L0,8 L8,4 z" fill="#C8102E"/>
+          </marker>
+          <style>
+            .lbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; font-weight: 700; fill: #C8102E; }
+            .node-text { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 500; fill: #1a1a2e; }
+            .node-text-white { font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 600; fill: white; }
+            .node-text-sm { font-family: 'IBM Plex Sans', sans-serif; font-size: 11px; fill: #374151; }
+          </style>
+        </defs>
+
+        <!-- CENTER X = 350 -->
+
+        <!-- INICIO -->
+        <rect x="270" y="20" width="160" height="40" rx="20" fill="#1a1a2e"/>
+        <text x="350" y="45" text-anchor="middle" class="node-text-white" font-weight="700" font-size="14">INICIO</text>
+
+        <!-- arrow -->
+        <line x1="350" y1="60" x2="350" y2="90" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- 1. Usuario solicita préstamo -->
+        <rect x="220" y="90" width="260" height="44" rx="3" fill="white" stroke="#0B7B8C" stroke-width="2"/>
+        <text x="350" y="112" text-anchor="middle" class="node-text">1. Usuario solicita préstamo</text>
+        <text x="350" y="126" text-anchor="middle" class="node-text-sm">de equipo en el sistema</text>
+
+        <line x1="350" y1="134" x2="350" y2="164" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- 2. Decisión: ¿Equipo disponible? -->
+        <polygon points="350,164 460,200 350,236 240,200" fill="#F4A300" stroke="#c67f00" stroke-width="1.5"/>
+        <text x="350" y="195" text-anchor="middle" class="node-text" font-weight="700" font-size="11">¿Equipo</text>
+        <text x="350" y="210" text-anchor="middle" class="node-text" font-weight="700" font-size="11">disponible?</text>
+
+        <!-- NO arrow → right → no disponible -->
+        <line x1="460" y1="200" x2="540" y2="200" stroke="#C8102E" stroke-width="2" marker-end="url(#arr-red)"/>
+        <text x="487" y="193" class="lbl">NO</text>
+        <rect x="540" y="178" width="140" height="44" rx="3" fill="#fee2e2" stroke="#C8102E" stroke-width="1.5"/>
+        <text x="610" y="197" text-anchor="middle" class="node-text" fill="#991b1b" font-size="11">Se notifica al usuario:</text>
+        <text x="610" y="212" text-anchor="middle" class="node-text" fill="#991b1b" font-size="11">equipo no disponible</text>
+        <!-- arrow down to FIN right side -->
+        <line x1="610" y1="222" x2="610" y2="980" stroke="#C8102E" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <line x1="610" y1="980" x2="430" y2="980" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- SÍ arrow down -->
+        <line x1="350" y1="236" x2="350" y2="266" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+        <text x="360" y="254" class="lbl">SÍ</text>
+
+        <!-- 3. Verificar identidad del usuario -->
+        <rect x="220" y="266" width="260" height="44" rx="3" fill="white" stroke="#0B7B8C" stroke-width="2"/>
+        <text x="350" y="285" text-anchor="middle" class="node-text">3. Sistema verifica identidad</text>
+        <text x="350" y="300" text-anchor="middle" class="node-text-sm">del usuario (cédula / carné)</text>
+
+        <line x1="350" y1="310" x2="350" y2="340" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- 4. Decisión: ¿Usuario autorizado? -->
+        <polygon points="350,340 460,376 350,412 240,376" fill="#F4A300" stroke="#c67f00" stroke-width="1.5"/>
+        <text x="350" y="371" text-anchor="middle" class="node-text" font-weight="700" font-size="11">¿Usuario</text>
+        <text x="350" y="386" text-anchor="middle" class="node-text" font-weight="700" font-size="11">autorizado?</text>
+
+        <!-- NO arrow left -->
+        <line x1="240" y1="376" x2="160" y2="376" stroke="#C8102E" stroke-width="2" marker-end="url(#arr-red)"/>
+        <text x="186" y="369" class="lbl">NO</text>
+        <rect x="20" y="354" width="140" height="44" rx="3" fill="#fee2e2" stroke="#C8102E" stroke-width="1.5"/>
+        <text x="90" y="373" text-anchor="middle" class="node-text" fill="#991b1b" font-size="11">Acceso denegado.</text>
+        <text x="90" y="388" text-anchor="middle" class="node-text" fill="#991b1b" font-size="11">Registrar intento.</text>
+        <!-- line to FIN left -->
+        <line x1="90" y1="398" x2="90" y2="980" stroke="#C8102E" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <line x1="90" y1="980" x2="270" y2="980" stroke="#C8102E" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+        <!-- SÍ arrow down -->
+        <line x1="350" y1="412" x2="350" y2="442" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+        <text x="360" y="430" class="lbl">SÍ</text>
+
+        <!-- 5. Registrar préstamo -->
+        <rect x="210" y="442" width="280" height="44" rx="3" fill="#0B7B8C" stroke="#075e6b" stroke-width="2"/>
+        <text x="350" y="462" text-anchor="middle" class="node-text-white">5. Registrar préstamo en sistema</text>
+        <text x="350" y="477" text-anchor="middle" class="node-text-white" font-size="11">(equipo, usuario, fecha/hora)</text>
+
+        <line x1="350" y1="486" x2="350" y2="516" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- 6. Entregar equipo -->
+        <rect x="220" y="516" width="260" height="44" rx="3" fill="white" stroke="#0B7B8C" stroke-width="2"/>
+        <text x="350" y="536" text-anchor="middle" class="node-text">6. Entregar equipo al usuario</text>
+        <text x="350" y="551" text-anchor="middle" class="node-text-sm">Encargado firma acta de entrega</text>
+
+        <line x1="350" y1="560" x2="350" y2="590" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- 7. Usuario usa el equipo -->
+        <rect x="220" y="590" width="260" height="44" rx="3" fill="white" stroke="#0B7B8C" stroke-width="2"/>
+        <text x="350" y="613" text-anchor="middle" class="node-text">7. Usuario utiliza el equipo</text>
+
+        <line x1="350" y1="634" x2="350" y2="664" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- 8. Usuario devuelve equipo -->
+        <rect x="210" y="664" width="280" height="44" rx="3" fill="#0B7B8C" stroke="#075e6b" stroke-width="2"/>
+        <text x="350" y="684" text-anchor="middle" class="node-text-white">8. Usuario devuelve el equipo</text>
+        <text x="350" y="699" text-anchor="middle" class="node-text-white" font-size="11">Encargado recibe el equipo</text>
+
+        <line x1="350" y1="708" x2="350" y2="738" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- 9. Decisión: ¿Equipo en buen estado? -->
+        <polygon points="350,738 460,774 350,810 240,774" fill="#F4A300" stroke="#c67f00" stroke-width="1.5"/>
+        <text x="350" y="769" text-anchor="middle" class="node-text" font-weight="700" font-size="11">¿Equipo en</text>
+        <text x="350" y="784" text-anchor="middle" class="node-text" font-weight="700" font-size="11">buen estado?</text>
+
+        <!-- NO → derecha -->
+        <line x1="460" y1="774" x2="530" y2="774" stroke="#C8102E" stroke-width="2" marker-end="url(#arr-red)"/>
+        <text x="480" y="767" class="lbl">NO</text>
+        <rect x="530" y="752" width="150" height="44" rx="3" fill="#fee2e2" stroke="#C8102E" stroke-width="1.5"/>
+        <text x="605" y="771" text-anchor="middle" class="node-text" fill="#991b1b" font-size="11">Registrar incidencia</text>
+        <text x="605" y="786" text-anchor="middle" class="node-text" fill="#991b1b" font-size="11">y notificar a área TI</text>
+        <!-- loop down to step 10 -->
+        <line x1="605" y1="796" x2="605" y2="864" stroke="#6b7280" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="605" y1="864" x2="490" y2="864" stroke="#6b7280" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- SÍ arrow down -->
+        <line x1="350" y1="810" x2="350" y2="840" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+        <text x="360" y="828" class="lbl">SÍ</text>
+
+        <!-- 10. Actualizar inventario -->
+        <rect x="210" y="840" width="280" height="44" rx="3" fill="white" stroke="#0B7B8C" stroke-width="2"/>
+        <text x="350" y="860" text-anchor="middle" class="node-text">10. Actualizar estado del equipo</text>
+        <text x="350" y="875" text-anchor="middle" class="node-text-sm">en inventario del sistema</text>
+
+        <line x1="350" y1="884" x2="350" y2="914" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- 11. Cerrar préstamo -->
+        <rect x="210" y="914" width="280" height="44" rx="3" fill="#1a1a2e" stroke="#0B7B8C" stroke-width="2"/>
+        <text x="350" y="934" text-anchor="middle" class="node-text-white">11. Cerrar registro de préstamo</text>
+        <text x="350" y="949" text-anchor="middle" class="node-text-white" font-size="11">Generar comprobante para el usuario</text>
+
+        <line x1="350" y1="958" x2="350" y2="970" stroke="#6b7280" stroke-width="2" marker-end="url(#arr)"/>
+
+        <!-- FIN -->
+        <rect x="270" y="970" width="160" height="40" rx="20" fill="#C8102E"/>
+        <text x="350" y="995" text-anchor="middle" class="node-text-white" font-weight="700" font-size="14">FIN</text>
+
+      </svg>
+    </div>
+
+    <!-- LEGEND -->
+    <div class="legend">
+      <div class="legend-item">
+        <svg class="legend-symbol" viewBox="0 0 28 18"><rect x="0" y="3" width="28" height="12" rx="6" fill="#1a1a2e"/></svg>
+        Inicio / Fin (terminal)
+      </div>
+      <div class="legend-item">
+        <svg class="legend-symbol" viewBox="0 0 28 18"><rect x="0" y="2" width="28" height="14" rx="2" fill="white" stroke="#0B7B8C" stroke-width="2"/></svg>
+        Proceso / Actividad
+      </div>
+      <div class="legend-item">
+        <svg class="legend-symbol" viewBox="0 0 28 18"><polygon points="14,0 28,9 14,18 0,9" fill="#F4A300"/></svg>
+        Decisión (sí / no)
+      </div>
+      <div class="legend-item">
+        <svg class="legend-symbol" viewBox="0 0 28 18"><rect x="0" y="2" width="28" height="14" rx="2" fill="#0B7B8C"/></svg>
+        Proceso clave del sistema
+      </div>
+      <div class="legend-item">
+        <svg class="legend-symbol" viewBox="0 0 28 18"><rect x="0" y="2" width="28" height="14" rx="2" fill="#fee2e2" stroke="#C8102E" stroke-width="1.5"/></svg>
+        Flujo alternativo / error
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Sistema de Gestión de Préstamo de Equipos · SENA</p>
+    <span>Proceso PC2 · Análisis y Diseño de Software · 2026</span>
+  </div>
+</div>
+
+</body>
+</html>
